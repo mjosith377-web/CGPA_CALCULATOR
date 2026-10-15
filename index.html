@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CGPA Calculator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e0e7ff, #f5f3ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 480px;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 10px 35px #00000018;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4338ca;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 7px;
+      font-weight: bold;
+      color: #334155;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 22px;
+      border: none;
+      border-radius: 8px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3730a3;
+    }
+
+    #result {
+      display: none;
+      margin-top: 22px;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      background: #eef2ff;
+    }
+
+    #cgpa {
+      font-size: 36px;
+      color: #4338ca;
+      font-weight: bold;
+    }
+
+    #message {
+      color: #475569;
+    }
+
+    .error {
+      color: #dc2626;
+      margin-top: 15px;
+    }
+
+    footer {
+      margin-top: 22px;
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>CGPA Calculator</h1>
+    <p class="subtitle">Calculate your CGPA for two semesters</p>
+
+    <form id="cgpaForm">
+      <h3>Semester 1</h3>
+
+      <label for="sgpa1">Semester 1 SGPA (0–10)</label>
+      <input type="number" id="sgpa1"
+        min="0" max="10" step="any" required>
+
+      <label for="credits1">Semester 1 Total Credits</label>
+      <input type="number" id="credits1"
+        min="0.01" step="any" required>
+
+      <h3>Semester 2</h3>
+
+      <label for="sgpa2">Semester 2 SGPA (0–10)</label>
+      <input type="number" id="sgpa2"
+        min="0" max="10" step="any" required>
+
+      <label for="credits2">Semester 2 Total Credits</label>
+      <input type="number" id="credits2"
+        min="0.01" step="any" required>
+
+      <button type="submit">Calculate CGPA</button>
+      <p id="error" class="error" role="alert"></p>
+    </form>
+
+    <section id="result" aria-live="polite">
+      <p>Your Final CGPA</p>
+      <div id="cgpa">0.00</div>
+      <p id="message"></p>
+      <button type="button" id="reset">Calculate Again</button>
+    </section>
+
+    <footer>CGPA Calculator Project | Built using HTML, CSS & JavaScript</footer>
+  </main>
+
+  <script>
+    const form = document.getElementById("cgpaForm");
+    const result = document.getElementById("result");
+    const error = document.getElementById("error");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      error.textContent = "";
+
+      const s1 = Number(document.getElementById("sgpa1").value);
+      const c1 = Number(document.getElementById("credits1").value);
+      const s2 = Number(document.getElementById("sgpa2").value);
+      const c2 = Number(document.getElementById("credits2").value);
+
+      if (!Number.isFinite(s1) || !Number.isFinite(s2) ||
+          !Number.isFinite(c1) || !Number.isFinite(c2) ||
+          s1 < 0 || s1 > 10 || s2 < 0 || s2 > 10 ||
+          c1 <= 0 || c2 <= 0) {
+        error.textContent = "Please enter valid SGPA and credit values.";
+        result.style.display = "none";
+        return;
+      }
+
+      const cgpa = (s1 * c1 + s2 * c2) / (c1 + c2);
+
+      document.getElementById("cgpa").textContent =
+        cgpa.toFixed(2);
+
+      document.getElementById("message").textContent =
+        "Calculated using the credit-weighted average.";
+
+      result.style.display = "block";
+    });
+
+    document.getElementById("reset").addEventListener("click", function() {
+      form.reset();
+      error.textContent = "";
+      result.style.display = "none";
+    });
+  </script>
+</body>
+</html>
