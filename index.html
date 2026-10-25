@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,11 +71,6 @@ button {
   cursor: pointer;
   font-weight: bold;
   margin: 5px 4px 5px 0;
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 
 .add { background: #dbeafe; color: #1d4ed8; }
@@ -156,13 +150,17 @@ th { background: #eef2ff; }
 <div class="card">
   <h2>Semester 1</h2>
   <div id="sem1"></div>
-  <button type="button" class="add" onclick="addSubject(1)">+ Add Subject</button>
+  <button type="button" class="add" onclick="addSubject(1)">
+    + Add Subject
+  </button>
 </div>
 
 <div class="card">
   <h2>Semester 2</h2>
   <div id="sem2"></div>
-  <button type="button" class="add" onclick="addSubject(2)">+ Add Subject</button>
+  <button type="button" class="add" onclick="addSubject(2)">
+    + Add Subject
+  </button>
 </div>
 
 <div class="card">
@@ -179,18 +177,8 @@ th { background: #eef2ff; }
     your university's official grading rules.
   </p>
 
-  <p class="note">
-    When you save, your student details and academic results
-    will be stored in the online database.
-  </p>
-
   <button type="button" class="calculate" onclick="calculate()">
     Calculate SGPA & CGPA
-  </button>
-
-  <button type="button" id="saveButton" class="add"
-          onclick="saveResults()" disabled>
-    Save Results to Database
   </button>
 
   <button type="button" class="reset" onclick="resetAll()">
@@ -198,30 +186,20 @@ th { background: #eef2ff; }
   </button>
 
   <p id="error" class="error" role="alert"></p>
-  <p id="saveStatus" class="note" role="status"></p>
   <div id="results"></div>
 </div>
 
 </div>
 
-<!-- Load Supabase before the configuration and calculator scripts. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 
 <script>
-let counts = {1: 0, 2: 0};
+let counts = { 1: 0, 2: 0 };
 let latestResults = null;
-let savedSnapshot = null;
 
 function invalidateResults() {
   latestResults = null;
-  savedSnapshot = null;
-
-  const button = document.getElementById("saveButton");
-  if (button) button.disabled = true;
-
-  const status = document.getElementById("saveStatus");
-  if (status) status.textContent = "";
 }
 
 function addSubject(sem) {
@@ -240,33 +218,39 @@ function addSubject(sem) {
 
   div.innerHTML = `
     <h3>Subject ${id}</h3>
+
     <div class="grid">
       <div>
         <label>Subject Name</label>
         <input class="name" maxlength="100"
                placeholder="e.g. Mathematics" required>
       </div>
+
       <div>
         <label>Credits</label>
         <input class="credits" type="number" min="0.01"
                max="100" step="any" placeholder="e.g. 4" required>
       </div>
+
       <div>
         <label>MSE (out of 40)</label>
         <input class="mse" type="number" min="0" max="40"
                step="any" required>
       </div>
+
       <div>
         <label>CIA (out of 30)</label>
         <input class="cia" type="number" min="0" max="30"
                step="any" required>
       </div>
+
       <div>
         <label>SEE (out of 80)</label>
         <input class="see" type="number" min="0" max="80"
                step="any" required>
       </div>
     </div>
+
     <button type="button" class="remove">Remove Subject</button>
   `;
 
@@ -298,7 +282,9 @@ function readSemester(sem) {
   ];
 
   if (subjects.length === 0) {
-    throw new Error("Add at least one subject to Semester " + sem + ".");
+    throw new Error(
+      "Add at least one subject to Semester " + sem + "."
+    );
   }
 
   let totalCredits = 0;
@@ -312,9 +298,16 @@ function readSemester(sem) {
     const ciaInput = el.querySelector(".cia").value;
     const seeInput = el.querySelector(".see").value;
 
-    if (!name || creditInput === "" || mseInput === "" ||
-        ciaInput === "" || seeInput === "") {
-      throw new Error("Complete every field in Semester " + sem + ".");
+    if (
+      !name ||
+      creditInput === "" ||
+      mseInput === "" ||
+      ciaInput === "" ||
+      seeInput === ""
+    ) {
+      throw new Error(
+        "Complete every field in Semester " + sem + "."
+      );
     }
 
     const credits = Number(creditInput);
@@ -322,12 +315,16 @@ function readSemester(sem) {
     const cia = Number(ciaInput);
     const see = Number(seeInput);
 
-    if (![credits, mse, cia, see].every(Number.isFinite) ||
-        credits <= 0 || credits > 100 ||
-        mse < 0 || mse > 40 ||
-        cia < 0 || cia > 30 ||
-        see < 0 || see > 80) {
-      throw new Error("Check the credits and marks in Semester " + sem + ".");
+    if (
+      ![credits, mse, cia, see].every(Number.isFinite) ||
+      credits <= 0 || credits > 100 ||
+      mse < 0 || mse > 40 ||
+      cia < 0 || cia > 30 ||
+      see < 0 || see > 80
+    ) {
+      throw new Error(
+        "Check the credits and marks in Semester " + sem + "."
+      );
     }
 
     const total = mse * 0.75 + cia + see / 2;
@@ -336,7 +333,15 @@ function readSemester(sem) {
     totalCredits += credits;
     weightedPoints += credits * gp;
 
-    rows.push({name, credits, mse, cia, see, total, gp});
+    rows.push({
+      name,
+      credits,
+      mse,
+      cia,
+      see,
+      total,
+      gp
+    });
   }
 
   return {
@@ -347,17 +352,43 @@ function readSemester(sem) {
   };
 }
 
+async function saveResultsAutomatically(record) {
+  // Save silently in the background. No message is shown to the student.
+  try {
+    if (
+      typeof supabaseClient === "undefined" ||
+      !supabaseClient
+    ) {
+      console.error("Supabase configuration was not loaded.");
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("sgpa_records")
+      .insert([record]);
+
+    if (error) {
+      console.error("Supabase save error:", error.message);
+    }
+  } catch (error) {
+    console.error("Unexpected database error:", error);
+  }
+}
+
 function calculate() {
-  const error = document.getElementById("error");
+  const errorElement = document.getElementById("error");
   const output = document.getElementById("results");
 
-  error.textContent = "";
+  errorElement.textContent = "";
   output.innerHTML = "";
   invalidateResults();
 
   try {
-    const studentName = document.getElementById("student").value.trim();
-    const studentId = document.getElementById("usn").value.trim();
+    const studentName =
+      document.getElementById("student").value.trim();
+
+    const studentId =
+      document.getElementById("usn").value.trim();
 
     if (!studentName) {
       throw new Error("Enter the student's name.");
@@ -380,26 +411,36 @@ function calculate() {
       total_credits: Number(totalCredits.toFixed(2))
     };
 
-    savedSnapshot = JSON.stringify(latestResults);
-
     function makeTable(sem, data) {
-      let html = `<h3>Semester ${sem} Results</h3>
-      <div class="table-wrap"><table>
-      <tr><th>Subject</th><th>Credits</th>
-      <th>Total / 100</th><th>Grade Point</th></tr>`;
+      let html = `
+        <h3>Semester ${sem} Results</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Subject</th>
+              <th>Credits</th>
+              <th>Total / 100</th>
+              <th>Grade Point</th>
+            </tr>
+      `;
 
       data.rows.forEach(r => {
-        html += `<tr>
-          <td>${escapeHTML(r.name)}</td>
-          <td>${r.credits}</td>
-          <td>${r.total.toFixed(2)}</td>
-          <td>${r.gp}</td>
-        </tr>`;
+        html += `
+          <tr>
+            <td>${escapeHTML(r.name)}</td>
+            <td>${r.credits}</td>
+            <td>${r.total.toFixed(2)}</td>
+            <td>${r.gp}</td>
+          </tr>
+        `;
       });
 
-      html += `</table></div>
-      <p>Total Credits: ${data.credits.toFixed(2)}</p>
-      <p><strong>SGPA: ${data.sgpa.toFixed(2)}</strong></p>`;
+      html += `
+          </table>
+        </div>
+        <p>Total Credits: ${data.credits.toFixed(2)}</p>
+        <p><strong>SGPA: ${data.sgpa.toFixed(2)}</strong></p>
+      `;
 
       return html;
     }
@@ -407,63 +448,30 @@ function calculate() {
     output.innerHTML =
       makeTable(1, s1) +
       makeTable(2, s2) +
-      `<div class="result">
-        <h2>Final CGPA</h2>
-        <div class="big">${cgpa.toFixed(2)}</div>
-        <p>${escapeHTML(studentName)}</p>
-        <p>Semester 1 SGPA: ${s1.sgpa.toFixed(2)}</p>
-        <p>Semester 2 SGPA: ${s2.sgpa.toFixed(2)}</p>
-        <p>Total Credits: ${totalCredits.toFixed(2)}</p>
-      </div>
-      <button type="button" class="add"
-              onclick="window.print()">Print / Save as PDF</button>`;
+      `
+        <div class="result">
+          <h2>Final CGPA</h2>
+          <div class="big">${cgpa.toFixed(2)}</div>
+          <p>${escapeHTML(studentName)}</p>
+          <p>Semester 1 SGPA: ${s1.sgpa.toFixed(2)}</p>
+          <p>Semester 2 SGPA: ${s2.sgpa.toFixed(2)}</p>
+          <p>Total Credits: ${totalCredits.toFixed(2)}</p>
+        </div>
 
-    document.getElementById("saveButton").disabled = false;
+        <button type="button" class="add"
+                onclick="window.print()">
+          Print / Save as PDF
+        </button>
+      `;
+
+    // Automatically save after a successful calculation.
+    // The student sees only the academic results.
+    const recordToSave = JSON.parse(JSON.stringify(latestResults));
+    saveResultsAutomatically(recordToSave);
 
   } catch (e) {
     latestResults = null;
-    savedSnapshot = null;
-    document.getElementById("saveButton").disabled = true;
-    error.textContent = e.message;
-  }
-}
-
-async function saveResults() {
-  const button = document.getElementById("saveButton");
-  const status = document.getElementById("saveStatus");
-
-  if (!latestResults || !savedSnapshot) {
-    status.textContent = "Calculate results first.";
-    return;
-  }
-
-  if (JSON.stringify(latestResults) !== savedSnapshot) {
-    status.textContent = "Your results changed. Calculate again before saving.";
-    button.disabled = true;
-    return;
-  }
-
-  if (typeof supabaseClient === "undefined") {
-    status.textContent = "Supabase configuration was not loaded.";
-    return;
-  }
-
-  button.disabled = true;
-  status.textContent = "Saving results...";
-
-  try {
-    const { error } = await supabaseClient
-      .from("sgpa_records")
-      .insert([latestResults]);
-
-    if (error) throw error;
-
-    status.textContent = "Results saved successfully!";
-  } catch (e) {
-    console.error("Supabase save error:", e);
-    status.textContent =
-      "Unable to save results. Check the database setup and permissions.";
-    button.disabled = false;
+    errorElement.textContent = e.message;
   }
 }
 
@@ -484,20 +492,23 @@ function resetAll() {
   document.getElementById("sem2").innerHTML = "";
   document.getElementById("results").innerHTML = "";
   document.getElementById("error").textContent = "";
-  document.getElementById("saveStatus").textContent = "";
 
-  counts = {1: 0, 2: 0};
+  counts = { 1: 0, 2: 0 };
   invalidateResults();
 
   addSubject(1);
   addSubject(2);
 }
 
-document.getElementById("student").addEventListener("input", invalidateResults);
-document.getElementById("usn").addEventListener("input", invalidateResults);
+document.getElementById("student")
+  .addEventListener("input", invalidateResults);
+
+document.getElementById("usn")
+  .addEventListener("input", invalidateResults);
 
 addSubject(1);
 addSubject(2);
 </script>
+
 </body>
 </html>
