@@ -134,8 +134,8 @@ th { background: #eef2ff; }
 <div class="container">
 
 <header>
-  <h1>SGPA & CGPA Calculator</h1>
-  <p>Student Academic Performance System</p>
+  <h1>DAYANANDA SAGAR UNIVERSITY</h1>
+  <p>CGPA CALCULATOR</p>
 </header>
 
 <div class="card">
@@ -146,8 +146,8 @@ th { background: #eef2ff; }
       <input id="student" placeholder="Enter student name" maxlength="100">
     </div>
     <div>
-      <label for="usn">USN / Student ID</label>
-      <input id="usn" placeholder="Enter student ID" maxlength="50">
+      <label for="usn">USN </label>
+      <input id="usn" placeholder="Enter student ID" maxlength="11">
     </div>
   </div>
 </div>
@@ -178,18 +178,14 @@ th { background: #eef2ff; }
     your university's official grading rules.
   </p>
 
-  <p class="note">
-    When you save, your student details and academic results
-    will be stored in the online database.
-  </p>
-
+  
   <button type="button" class="calculate" onclick="calculate()">
     Calculate SGPA & CGPA
   </button>
 
   <button type="button" id="saveButton" class="add"
           onclick="saveResults()" disabled>
-    Save Results to Database
+    Save 
   </button>
 
   <button type="button" class="reset" onclick="resetAll()">
@@ -204,8 +200,10 @@ th { background: #eef2ff; }
 </div>
 
 <!-- Load Supabase before the configuration and calculator scripts. -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+
 
 <script>
 let counts = {1: 0, 2: 0};
