@@ -355,27 +355,30 @@ function readSemester(sem) {
 async function saveResultsAutomatically(record) {
   // Save silently in the background. No message is shown to the student.
   try {
-    if (
-      typeof supabaseClient === "undefined" ||
-      !supabaseClient
-    ) {
-      console.error("Supabase configuration was not loaded.");
-      return;
+    if (typeof supabaseClient === "undefined" || !supabaseClient) {
+      console.error("Supabase client is not initialized. Check supabase-config.js.");
+      return false;
     }
 
+    // INSERT only; do not use .select() because students have no SELECT access.
     const { error } = await supabaseClient
       .from("sgpa_records")
       .insert([record]);
 
     if (error) {
-      console.error("Supabase save error:", error.message);
+      console.error("Supabase save error:", error);
+      return false;
     }
+
+    console.log("Supabase insert succeeded.");
+    return true;
   } catch (error) {
     console.error("Unexpected database error:", error);
+    return false;
   }
 }
 
-function calculate() {
+async function calculate() {
   const errorElement = document.getElementById("error");
   const output = document.getElementById("results");
 
