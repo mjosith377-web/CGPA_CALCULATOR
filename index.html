@@ -538,9 +538,14 @@ async function saveResults() {
   status.textContent = "Saving results...";
 
   try {
-    const { error } = await supabaseClient
-      .from("sgpa_records")
-      .insert([latestResults]);
+    const { error } = await window.supabaseClient
+  .from("sgpa_records")
+  .insert([latestResults]);
+
+if (error) {
+  console.error("Supabase save error:", error);
+  throw error;
+}
 
     if (error) throw error;
 
