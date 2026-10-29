@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -122,6 +123,17 @@ th { background: #eef2ff; }
   line-height: 1.5;
 }
 
+.save-card {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.save-card .calculate {
+  max-width: 450px;
+  padding: 15px;
+  font-size: 16px;
+}
+
 @media(max-width: 550px) {
   body { padding: 10px; }
   .grid { grid-template-columns: 1fr; }
@@ -146,7 +158,7 @@ th { background: #eef2ff; }
       <input id="student" placeholder="Enter student name" maxlength="100">
     </div>
     <div>
-      <label for="usn">USN </label>
+      <label for="usn">USN</label>
       <input id="usn" placeholder="Enter student ID" maxlength="11">
     </div>
   </div>
@@ -154,9 +166,18 @@ th { background: #eef2ff; }
 
 <div class="card">
   <h2>Semesters</h2>
-  <p class="note">Start with Semester 1. After entering your subjects for the current semester, click “+ Add Semester” to create the next semester. You can add up to 8 semesters without losing the data already entered.</p>
-  <button type="button" id="addSemesterButton" class="add" onclick="addSemester()">+ Add Semester</button>
-  <p id="semesterStatus" class="note" role="status">Semester 1 is ready.</p>
+  <p class="note">
+    Start with Semester 1. After entering your subjects for the current
+    semester, click “+ Add Semester” to create the next semester.
+    You can add up to 8 semesters without losing the data already entered.
+  </p>
+
+  <button type="button" id="addSemesterButton" class="add"
+          onclick="addSemester()">+ Add Semester</button>
+
+  <p id="semesterStatus" class="note" role="status">
+    Semester 1 is ready.
+  </p>
 </div>
 
 <div id="semesterContainer"></div>
@@ -165,25 +186,18 @@ th { background: #eef2ff; }
   <h2>Calculate Results</h2>
 
   <p class="note">
-    Choose a mark-entry method for each subject. If you enter MSE, CIA and SEE,
-    Total = (MSE × 0.75) + CIA + (SEE ÷ 2). If you enter a grade directly,
-    the calculator uses the grade points from the grading table. A total mark is
-    shown only when marks are entered.
+    Choose a mark-entry method for each subject. If you enter MSE, CIA
+    and SEE, Total = (MSE × 0.75) + CIA + (SEE ÷ 2).
+    If you enter a grade directly, the calculator uses the grade points
+    from the grading table. A total mark is shown only when marks are entered.
   </p>
 
   <p class="note">
-    Grade mapping follows the provided table: O=10, A+=9, A=8, B+=7,
-    B=6, C=5, P=4 and F=0.
+    Grade mapping: O=10, A+=9, A=8, B+=7, B=6, C=5, P=4 and F=0.
   </p>
 
-  
   <button type="button" class="calculate" onclick="calculate()">
-    Calculate SGPA & CGPA
-  </button>
-
-  <button type="button" id="saveButton" class="add"
-          onclick="saveResults()" disabled>
-    Save 
+    Calculate SGPA &amp; CGPA
   </button>
 
   <button type="button" class="reset" onclick="resetAll()">
@@ -191,8 +205,21 @@ th { background: #eef2ff; }
   </button>
 
   <p id="error" class="error" role="alert"></p>
-  <p id="saveStatus" class="note" role="status"></p>
   <div id="results"></div>
+</div>
+
+<!-- SAVE BUTTON IS AT THE BOTTOM OF THE PAGE -->
+<div class="card save-card">
+  <h2>Save Results</h2>
+  <p class="note">
+    Click su
+  </p>
+
+  <button type="button" id="saveButton" class="calculate"
+          onclick="saveResults()" disabled>
+  </button>
+
+  <p id="saveStatus" class="note" role="status"></p>
 </div>
 
 </div>
@@ -203,7 +230,7 @@ th { background: #eef2ff; }
 
 <script>
 let counts = {};
-let activeSemesterCount = 2;
+let activeSemesterCount = 0;
 let latestResults = null;
 let savedSnapshot = null;
 
@@ -229,24 +256,31 @@ function addSemester() {
     return;
   }
 
-  activeSemesterCount += 1;
+  activeSemesterCount++;
   const sem = activeSemesterCount;
   counts[sem] = 0;
 
   const card = document.createElement("div");
   card.className = "card";
-  card.innerHTML = `<h2>Semester ${sem}</h2>
+  card.innerHTML = `
+    <h2>Semester ${sem}</h2>
     <div id="sem${sem}"></div>
-    <button type="button" class="add" onclick="addSubject(${sem})">+ Add Subject</button>`;
+    <button type="button" class="add"
+      onclick="addSubject(${sem})">+ Add Subject</button>
+  `;
+
   document.getElementById("semesterContainer").appendChild(card);
   addSubject(sem);
 
   document.getElementById("semesterStatus").textContent =
     `Semester ${sem} added. You now have ${activeSemesterCount} semester${activeSemesterCount === 1 ? "" : "s"}.`;
+
   if (activeSemesterCount >= 8) {
     document.getElementById("addSemesterButton").disabled = true;
-    document.getElementById("semesterStatus").textContent += " Maximum reached.";
+    document.getElementById("semesterStatus").textContent +=
+      " Maximum reached.";
   }
+
   invalidateResults();
 }
 
@@ -274,15 +308,20 @@ function addSubject(sem) {
 
   div.innerHTML = `
     <h3>Subject ${id}</h3>
+
     <div class="grid">
       <div>
         <label>Subject Name</label>
-        <input class="name" maxlength="100" placeholder="e.g. Mathematics" required>
+        <input class="name" maxlength="100"
+          placeholder="e.g. Mathematics" required>
       </div>
+
       <div>
         <label>Credits</label>
-        <input class="credits" type="number" min="0.01" max="100" step="any" placeholder="e.g. 4" required>
+        <input class="credits" type="number" min="0.01"
+          max="100" step="any" placeholder="e.g. 4" required>
       </div>
+
       <div>
         <label>How do you want to enter the result?</label>
         <select class="entryMode">
@@ -290,18 +329,22 @@ function addSubject(sem) {
           <option value="grade">Enter grade directly</option>
         </select>
       </div>
+
       <div class="marksFields">
         <label>MSE (out of 40)</label>
         <input class="mse" type="number" min="0" max="40" step="any">
       </div>
+
       <div class="marksFields">
         <label>CIA (out of 30)</label>
         <input class="cia" type="number" min="0" max="30" step="any">
       </div>
+
       <div class="marksFields">
         <label>SEE (out of 80)</label>
         <input class="see" type="number" min="0" max="80" step="any">
       </div>
+
       <div class="gradeField" hidden>
         <label>Select Grade</label>
         <select class="grade">
@@ -317,6 +360,7 @@ function addSubject(sem) {
         </select>
       </div>
     </div>
+
     <button type="button" class="remove">Remove Subject</button>
   `;
 
@@ -326,25 +370,51 @@ function addSubject(sem) {
   });
 
   const modeSelect = div.querySelector(".entryMode");
+
   const updateEntryMode = () => {
     const useGrade = modeSelect.value === "grade";
-    div.querySelectorAll(".marksFields").forEach(field => field.hidden = useGrade);
+
+    div.querySelectorAll(".marksFields").forEach(field => {
+      field.hidden = useGrade;
+    });
+
     div.querySelector(".gradeField").hidden = !useGrade;
-    div.querySelectorAll(".marksFields input").forEach(input => input.required = !useGrade);
+
+    div.querySelectorAll(".marksFields input").forEach(input => {
+      input.required = !useGrade;
+    });
+
     div.querySelector(".grade").required = useGrade;
     invalidateResults();
   };
+
   modeSelect.addEventListener("change", updateEntryMode);
+
   div.querySelectorAll("input, select").forEach(input => {
     input.addEventListener("input", invalidateResults);
     input.addEventListener("change", invalidateResults);
   });
+
   updateEntryMode();
   document.getElementById("sem" + sem).appendChild(div);
 }
 
-const gradePoints = {"O":10, "A+":9, "A":8, "B+":7, "B":6, "C":5, "P":4, "F":0};
-const gradeDescriptions = {"O":"Outstanding", "A+":"Excellent", "A":"Very Good", "B+":"Good", "B":"Above Average", "C":"Average", "P":"Pass", "F":"Fail"};
+const gradePoints = {
+  "O": 10, "A+": 9, "A": 8, "B+": 7,
+  "B": 6, "C": 5, "P": 4, "F": 0
+};
+
+const gradeDescriptions = {
+  "O": "Outstanding",
+  "A+": "Excellent",
+  "A": "Very Good",
+  "B+": "Good",
+  "B": "Above Average",
+  "C": "Average",
+  "P": "Pass",
+  "F": "Fail"
+};
+
 function getGradeFromTotal(total) {
   if (total >= 90) return "O";
   if (total >= 80) return "A+";
@@ -375,39 +445,83 @@ function readSemester(sem) {
     const mode = el.querySelector(".entryMode").value;
 
     if (!name || creditInput === "") {
-      throw new Error("Enter the subject name and credits in Semester " + sem + ".");
+      throw new Error(
+        "Enter the subject name and credits in Semester " + sem + "."
+      );
     }
+
     const credits = Number(creditInput);
+
     if (!Number.isFinite(credits) || credits <= 0 || credits > 100) {
       throw new Error("Check the credits in Semester " + sem + ".");
     }
 
-    let mse = null, cia = null, see = null, total = null, grade, gp;
+    let mse = null;
+    let cia = null;
+    let see = null;
+    let total = null;
+    let grade;
+    let gp;
+
     if (mode === "marks") {
       const mseInput = el.querySelector(".mse").value;
       const ciaInput = el.querySelector(".cia").value;
       const seeInput = el.querySelector(".see").value;
+
       if (mseInput === "" || ciaInput === "" || seeInput === "") {
-        throw new Error("Enter MSE, CIA and SEE marks for every subject in Semester " + sem + ".");
+        throw new Error(
+          "Enter MSE, CIA and SEE marks for every subject in Semester " +
+          sem + "."
+        );
       }
-      mse = Number(mseInput); cia = Number(ciaInput); see = Number(seeInput);
-      if (![mse, cia, see].every(Number.isFinite) || mse < 0 || mse > 40 || cia < 0 || cia > 30 || see < 0 || see > 80) {
-        throw new Error("MSE must be 0–40, CIA 0–30 and SEE 0–80 in Semester " + sem + ".");
+
+      mse = Number(mseInput);
+      cia = Number(ciaInput);
+      see = Number(seeInput);
+
+      if (
+        ![mse, cia, see].every(Number.isFinite) ||
+        mse < 0 || mse > 40 ||
+        cia < 0 || cia > 30 ||
+        see < 0 || see > 80
+      ) {
+        throw new Error(
+          "MSE must be 0–40, CIA 0–30 and SEE 0–80 in Semester " +
+          sem + "."
+        );
       }
+
       total = mse * 0.75 + cia + see / 2;
       grade = getGradeFromTotal(total);
       gp = gradePoints[grade];
+
     } else {
       grade = el.querySelector(".grade").value;
+
       if (!grade || !(grade in gradePoints)) {
-        throw new Error("Select a grade for every subject in Semester " + sem + ".");
+        throw new Error(
+          "Select a grade for every subject in Semester " + sem + "."
+        );
       }
+
       gp = gradePoints[grade];
     }
 
     totalCredits += credits;
     weightedPoints += credits * gp;
-    rows.push({name, credits, mode, mse, cia, see, total, grade, gp, description: gradeDescriptions[grade]});
+
+    rows.push({
+      name,
+      credits,
+      mode,
+      mse,
+      cia,
+      see,
+      total,
+      grade,
+      gp,
+      description: gradeDescriptions[grade]
+    });
   }
 
   return {
@@ -435,24 +549,33 @@ function calculate() {
     }
 
     const semesters = [];
+
     for (let sem = 1; sem <= activeSemesterCount; sem++) {
       semesters.push(readSemester(sem));
     }
 
-    const totalCredits = semesters.reduce((sum, data) => sum + data.credits, 0);
-    const totalPoints = semesters.reduce((sum, data) => sum + data.points, 0);
+    const totalCredits = semesters.reduce(
+      (sum, data) => sum + data.credits, 0
+    );
+
+    const totalPoints = semesters.reduce(
+      (sum, data) => sum + data.points, 0
+    );
+
     const cgpa = totalPoints / totalCredits;
 
     latestResults = {
       student_name: studentName,
       student_id: studentId || null,
       semester_count: activeSemesterCount,
+
       semesters: semesters.map((data, index) => ({
         semester: index + 1,
         subjects: data.rows,
         sgpa: Number(data.sgpa.toFixed(2)),
         total_credits: Number(data.credits.toFixed(2))
       })),
+
       cgpa: Number(cgpa.toFixed(2)),
       total_credits: Number(totalCredits.toFixed(2))
     };
@@ -460,30 +583,47 @@ function calculate() {
     savedSnapshot = JSON.stringify(latestResults);
 
     function makeTable(sem, data) {
-      let html = `<h3>Semester ${sem} Results</h3>
-      <div class="table-wrap"><table>
-      <tr><th>Subject</th><th>Credits</th><th>Entry Method</th>
-      <th>Total / 100</th><th>Grade</th><th>Grade Points</th></tr>`;
+      let html = `
+        <h3>Semester ${sem} Results</h3>
+        <div class="table-wrap">
+        <table>
+          <tr>
+            <th>Subject</th>
+            <th>Credits</th>
+            <th>Entry Method</th>
+            <th>Total / 100</th>
+            <th>Grade</th>
+            <th>Grade Points</th>
+          </tr>
+      `;
 
       data.rows.forEach(r => {
-        html += `<tr>
-          <td>${escapeHTML(r.name)}</td>
-          <td>${r.credits}</td>
-          <td>${r.mode === "marks" ? "MSE/CIA/SEE" : "Grade entered"}</td>
-          <td>${r.total === null ? "—" : r.total.toFixed(2)}</td>
-          <td>${escapeHTML(r.grade)} (${escapeHTML(r.description)})</td>
-          <td>${r.gp}</td>
-        </tr>`;
+        html += `
+          <tr>
+            <td>${escapeHTML(r.name)}</td>
+            <td>${r.credits}</td>
+            <td>${r.mode === "marks" ? "MSE/CIA/SEE" : "Grade entered"}</td>
+            <td>${r.total === null ? "—" : r.total.toFixed(2)}</td>
+            <td>${escapeHTML(r.grade)} (${escapeHTML(r.description)})</td>
+            <td>${r.gp}</td>
+          </tr>
+        `;
       });
 
-      html += `</table></div>
-      <p>Total Credits: ${data.credits.toFixed(2)}</p>
-      <p><strong>SGPA: ${data.sgpa.toFixed(2)}</strong></p>`;
+      html += `
+        </table>
+        </div>
+        <p>Total Credits: ${data.credits.toFixed(2)}</p>
+        <p><strong>SGPA: ${data.sgpa.toFixed(2)}</strong></p>
+      `;
 
       return html;
     }
 
-    const semesterTables = semesters.map((data, index) => makeTable(index + 1, data)).join("");
+    const semesterTables = semesters
+      .map((data, index) => makeTable(index + 1, data))
+      .join("");
+
     const sgpaSummary = semesters.map((data, index) =>
       `<p>Semester ${index + 1} SGPA: ${data.sgpa.toFixed(2)}</p>`
     ).join("");
@@ -497,7 +637,9 @@ function calculate() {
         ${sgpaSummary}
         <p>Total Credits: ${totalCredits.toFixed(2)}</p>
       </div>
-      <button type="button" class="add" onclick="window.print()">Print / Save as PDF</button>`;
+      <button type="button" class="add" onclick="window.print()">
+        Print / Save as PDF
+      </button>`;
 
     document.getElementById("saveButton").disabled = false;
 
@@ -519,16 +661,21 @@ async function saveResults() {
   }
 
   if (JSON.stringify(latestResults) !== savedSnapshot) {
-    status.textContent = "Your results changed. Calculate again before saving.";
+    status.textContent =
+      "Your results changed. Calculate again before saving.";
     button.disabled = true;
     return;
   }
 
-  if (!window.supabaseClient ||
-      typeof window.supabaseClient.from !== "function") {
+  if (
+    !window.supabaseClient ||
+    typeof window.supabaseClient.from !== "function"
+  ) {
     status.textContent =
-      "Supabase is not configured. Check that supabase-config.js loads correctly.";
-    console.error("Supabase client missing. Check script order and supabase-config.js.");
+      "Supabase is not configured. Check supabase-config.js.";
+    console.error(
+      "Supabase client missing. Check script order and supabase-config.js."
+    );
     return;
   }
 
@@ -537,17 +684,14 @@ async function saveResults() {
 
   try {
     const { error } = await window.supabaseClient
-  .from("sgpa_records")
-  .insert([latestResults]);
-
-if (error) {
-  console.error("Supabase save error:", error);
-  throw error;
-}
+      .from("sgpa_records")
+      .insert([latestResults]);
 
     if (error) throw error;
 
-    status.textContent = "Results saved successfully!";
+    // Do not display a success message to students.
+    status.textContent = "";
+
   } catch (e) {
     console.error("Supabase save error:", e);
 
@@ -558,7 +702,10 @@ if (error) {
       e.code ? "Code: " + e.code : ""
     ].filter(Boolean).join(" | ");
 
-    status.textContent = "Save failed: " + (details || "Unknown error. Check the browser console.");
+    status.textContent =
+      "Save failed: " +
+      (details || "Unknown error. Check the browser console.");
+
     button.disabled = false;
   }
 }
@@ -580,13 +727,18 @@ function resetAll() {
   document.getElementById("error").textContent = "";
   document.getElementById("saveStatus").textContent = "";
 
-  document.getElementById("semesterStatus").textContent = "Semester 1 is ready.";
+  document.getElementById("semesterStatus").textContent =
+    "Semester 1 is ready.";
+
   invalidateResults();
   initializeSemesters();
 }
 
-document.getElementById("student").addEventListener("input", invalidateResults);
-document.getElementById("usn").addEventListener("input", invalidateResults);
+document.getElementById("student")
+  .addEventListener("input", invalidateResults);
+
+document.getElementById("usn")
+  .addEventListener("input", invalidateResults);
 
 initializeSemesters();
 </script>
