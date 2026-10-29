@@ -526,9 +526,11 @@ async function saveResults() {
     return;
   }
 
-  if (typeof supabaseClient === "undefined" || !supabaseClient ||
-      typeof supabaseClient.from !== "function") {
-    status.textContent = "Calculation works, but saving is unavailable because supabase-config.js did not load or supabaseClient is not configured.";
+  if (!window.supabaseClient ||
+      typeof window.supabaseClient.from !== "function") {
+    status.textContent =
+      "Supabase is not configured. Check that supabase-config.js loads correctly.";
+    console.error("Supabase client missing. Check script order and supabase-config.js.");
     return;
   }
 
@@ -545,8 +547,15 @@ async function saveResults() {
     status.textContent = "Results saved successfully!";
   } catch (e) {
     console.error("Supabase save error:", e);
-    status.textContent =
-      "Unable to save results. Check the database setup and permissions.";
+
+    const details = [
+      e.message,
+      e.details,
+      e.hint,
+      e.code ? "Code: " + e.code : ""
+    ].filter(Boolean).join(" | ");
+
+    status.textContent = "Save failed: " + (details || "Unknown error. Check the browser console.");
     button.disabled = false;
   }
 }
