@@ -5,347 +5,164 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Student SGPA & CGPA Calculator</title>
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background: #eef2ff;
-  color: #1e293b;
-}
-
-.container { max-width: 1000px; margin: auto; }
-
-header {
-  text-align: center;
-  background: #3730a3;
-  color: white;
-  padding: 25px;
-  border-radius: 14px;
-}
-
-.card {
-  background: white;
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px #00000010;
-}
-
-h2 { color: #4338ca; }
-
-.subject {
-  border: 1px solid #cbd5e1;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 10px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-input, select {
-  width: 100%;
-  padding: 11px;
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  font-size: 16px;
-}
-
-button {
-  padding: 12px 16px;
-  border: 0;
-  border-radius: 7px;
-  cursor: pointer;
-  font-weight: bold;
-  margin: 5px 4px 5px 0;
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.add { background: #dbeafe; color: #1d4ed8; }
-.remove { background: #fee2e2; color: #b91c1c; }
-.calculate { background: #4338ca; color: white; width: 100%; }
-.reset { background: #e2e8f0; color: #334155; }
-
-.table-wrap { overflow-x: auto; }
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-th, td {
-  border: 1px solid #cbd5e1;
-  padding: 10px;
-  text-align: center;
-}
-
-th { background: #eef2ff; }
-
-.result {
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 15px;
-}
-
-.big {
-  font-size: 34px;
-  font-weight: bold;
-  color: #047857;
-}
-
-.error { color: #b91c1c; font-weight: bold; }
-
-.note {
-  color: #64748b;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.save-card {
-  margin-top: 24px;
-  text-align: center;
-}
-
-.save-card .calculate {
-  max-width: 450px;
-  padding: 15px;
-  font-size: 16px;
-}
-
-@media(max-width: 550px) {
-  body { padding: 10px; }
-  .grid { grid-template-columns: 1fr; }
-  .card { padding: 14px; }
-}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#eef2ff;color:#1e293b}
+.container{max-width:1000px;margin:auto}
+header{text-align:center;background:#3730a3;color:white;padding:25px;border-radius:14px}
+.card{background:white;margin-top:20px;padding:20px;border-radius:12px;box-shadow:0 4px 15px #00000010}
+h2{color:#4338ca}
+.subject{border:1px solid #cbd5e1;padding:15px;margin:15px 0;border-radius:10px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{display:block;font-size:14px;font-weight:bold;margin-bottom:6px}
+input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:7px;font-size:16px}
+button{padding:12px 16px;border:0;border-radius:7px;cursor:pointer;font-weight:bold;margin:5px 4px 5px 0}
+button:disabled{opacity:.55;cursor:not-allowed}
+.add{background:#dbeafe;color:#1d4ed8}
+.remove{background:#fee2e2;color:#b91c1c}
+.calculate{background:#4338ca;color:white;width:100%}
+.reset{background:#e2e8f0;color:#334155}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin-top:12px;font-size:14px}
+th,td{border:1px solid #cbd5e1;padding:10px;text-align:center}
+th{background:#eef2ff}
+.result{background:#ecfdf5;border:1px solid #a7f3d0;padding:20px;border-radius:10px;margin-top:15px}
+.big{font-size:34px;font-weight:bold;color:#047857}
+.error{color:#b91c1c;font-weight:bold}
+.note{color:#64748b;font-size:13px;line-height:1.5}
+@media(max-width:550px){body{padding:10px}.grid{grid-template-columns:1fr}.card{padding:14px}}
+@media print{button,.no-print{display:none!important}body{background:white;padding:0}.card{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
-
 <body>
 <div class="container">
-
 <header>
-  <h1>DAYANANDA SAGAR UNIVERSITY</h1>
-  <p>CGPA CALCULATOR</p>
+<h1>DAYANANDA SAGAR UNIVERSITY</h1>
+<p>SGPA &amp; CGPA CALCULATOR</p>
 </header>
 
 <div class="card">
-  <h2>Student Details</h2>
-  <div class="grid">
-    <div>
-      <label for="student">Student Name</label>
-      <input id="student" placeholder="Enter student name" maxlength="100">
-    </div>
-    <div>
-      <label for="usn">USN</label>
-      <input id="usn" placeholder="Enter student ID" maxlength="11">
-    </div>
-  </div>
+<h2>Student Details</h2>
+<div class="grid">
+<div><label for="student">Student Name</label><input id="student" maxlength="100" required placeholder="Enter student name"></div>
+<div><label for="usn">USN</label><input id="usn" maxlength="11" placeholder="Enter student ID"></div>
+</div>
 </div>
 
 <div class="card">
-  <h2>Semesters</h2>
-  <p class="note">
-    Start with Semester 1. After entering your subjects for the current
-    semester, click “+ Add Semester” to create the next semester.
-    You can add up to 8 semesters without losing the data already entered.
-  </p>
-
-  <button type="button" id="addSemesterButton" class="add"
-          onclick="addSemester()">+ Add Semester</button>
-
-  <p id="semesterStatus" class="note" role="status">
-    Semester 1 is ready.
-  </p>
+<h2>Semesters</h2>
+<p class="note">Start with Semester 1. Add up to 8 semesters. Each semester supports up to 20 subjects.</p>
+<button type="button" id="addSemesterButton" class="add">+ Add Semester</button>
+<p id="semesterStatus" class="note" role="status">Semester 1 is ready.</p>
 </div>
 
 <div id="semesterContainer"></div>
 
 <div class="card">
-  <h2>Calculate Results</h2>
-
-  <p class="note">
-    Choose a mark-entry method for each subject. If you enter MSE, CIA
-    and SEE, Total = (MSE × 0.75) + CIA + (SEE ÷ 2).
-    If you enter a grade directly, the calculator uses the grade points
-    from the grading table. A total mark is shown only when marks are entered.
-  </p>
-
-  <p class="note">
-    Grade mapping: O=10, A+=9, A=8, B+=7, B=6, C=5, P=4 and F=0.
-  </p>
-
-  <button type="button" class="calculate" onclick="calculate()">
-    Calculate SGPA &amp; CGPA
-  </button>
-
-  <button type="button" class="reset" onclick="resetAll()">
-    Clear All
-  </button>
-
-  <p id="error" class="error" role="alert"></p>
-  <div id="results"></div>
+<h2>Calculate Results</h2>
+<p class="note">Total = (MSE × 0.75) + CIA + (SEE ÷ 2).</p>
+<p class="note">Grade mapping: O=10, A+=9, A=8, B+=7, B=6, C=5, P=4, F=0.</p>
+<button type="button" id="calculateButton" class="calculate">Calculate SGPA &amp; CGPA</button>
+<button type="button" id="resetButton" class="reset">Clear All</button>
+<p id="error" class="error" role="alert"></p>
+<p id="saveStatus" class="note" role="status"></p>
+<div id="results"></div>
+</div>
 </div>
 
-<!-- SAVE BUTTON IS AT THE BOTTOM OF THE PAGE -->
-<div class="card save-card">
-  <h2>Save Results</h2>
-  <p class="note">
-  </p>
-
-  <button type="button" id="saveButton" class="calculate"
-          onclick="saveResults()" disabled>
-  </button>
-
-  <p id="saveStatus" class="note" role="status"></p>
-</div>
-
-</div>
-
-<!-- Load Supabase before the configuration and calculator scripts. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-
 <script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const gradePoints = {"O":10,"A+":9,"A":8,"B+":7,"B":6,"C":5,"P":4,"F":0};
+const gradeDescriptions = {
+  "O":"Outstanding","A+":"Excellent","A":"Very Good","B+":"Good",
+  "B":"Above Average","C":"Average","P":"Pass","F":"Fail"
+};
+
 let counts = {};
 let activeSemesterCount = 0;
-let latestResults = null;
-let savedSnapshot = null;
+let saving = false;
+let submissionVersion = 0;
 
 function invalidateResults() {
-  latestResults = null;
-  savedSnapshot = null;
+  submissionVersion++;
+  $("saveStatus").textContent = "";
+}
 
-  const button = document.getElementById("saveButton");
-  if (button) button.disabled = true;
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[ch]);
+}
 
-  const status = document.getElementById("saveStatus");
-  if (status) status.textContent = "";
+function getGradeFromTotal(total) {
+  if(total>=90)return "O";
+  if(total>=80)return "A+";
+  if(total>=70)return "A";
+  if(total>=60)return "B+";
+  if(total>=55)return "B";
+  if(total>=50)return "C";
+  if(total>=40)return "P";
+  return "F";
 }
 
 function addSemester() {
-  const error = document.getElementById("error");
-  error.textContent = "";
-
-  if (activeSemesterCount >= 8) {
-    document.getElementById("semesterStatus").textContent =
-      "You have reached the maximum of 8 semesters.";
-    document.getElementById("addSemesterButton").disabled = true;
+  $("error").textContent = "";
+  if(activeSemesterCount>=8) {
+    $("semesterStatus").textContent="Maximum of 8 semesters reached.";
     return;
   }
 
   activeSemesterCount++;
-  const sem = activeSemesterCount;
-  counts[sem] = 0;
+  const sem=activeSemesterCount;
+  counts[sem]=0;
 
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = `
+  const card=document.createElement("div");
+  card.className="card";
+  card.innerHTML=`
     <h2>Semester ${sem}</h2>
     <div id="sem${sem}"></div>
-    <button type="button" class="add"
-      onclick="addSubject(${sem})">+ Add Subject</button>
+    <button type="button" class="add">+ Add Subject</button>
   `;
-
-  document.getElementById("semesterContainer").appendChild(card);
+  card.querySelector("button").addEventListener("click",()=>addSubject(sem));
+  $("semesterContainer").appendChild(card);
   addSubject(sem);
 
-  document.getElementById("semesterStatus").textContent =
-    `Semester ${sem} added. You now have ${activeSemesterCount} semester${activeSemesterCount === 1 ? "" : "s"}.`;
-
-  if (activeSemesterCount >= 8) {
-    document.getElementById("addSemesterButton").disabled = true;
-    document.getElementById("semesterStatus").textContent +=
-      " Maximum reached.";
-  }
-
+  $("semesterStatus").textContent=`Semester ${sem} is ready.`;
+  $("addSemesterButton").disabled=activeSemesterCount>=8;
   invalidateResults();
 }
 
-function initializeSemesters() {
-  activeSemesterCount = 0;
-  counts = {};
-  document.getElementById("semesterContainer").innerHTML = "";
-  document.getElementById("addSemesterButton").disabled = false;
-  addSemester();
-}
-
 function addSubject(sem) {
-  if (counts[sem] >= 20) {
+  if(counts[sem]>=20) {
     alert("Maximum 20 subjects per semester.");
     return;
   }
 
-  invalidateResults();
   counts[sem]++;
-
-  const id = counts[sem];
-  const div = document.createElement("div");
-  div.className = "subject";
-  div.dataset.subject = id;
-
-  div.innerHTML = `
+  const id=counts[sem];
+  const div=document.createElement("div");
+  div.className="subject";
+  div.innerHTML=`
     <h3>Subject ${id}</h3>
-
     <div class="grid">
+      <div><label>Subject Name</label><input class="name" maxlength="100" required placeholder="e.g. Mathematics"></div>
+      <div><label>Credits</label><input class="credits" type="number" min="0.01" max="100" step="any" required placeholder="e.g. 4"></div>
       <div>
-        <label>Subject Name</label>
-        <input class="name" maxlength="100"
-          placeholder="e.g. Mathematics" required>
-      </div>
-
-      <div>
-        <label>Credits</label>
-        <input class="credits" type="number" min="0.01"
-          max="100" step="any" placeholder="e.g. 4" required>
-      </div>
-
-      <div>
-        <label>How do you want to enter the result?</label>
+        <label>Entry Method</label>
         <select class="entryMode">
-          <option value="marks">Enter MSE, CIA and SEE marks</option>
+          <option value="marks">Enter MSE, CIA and SEE</option>
           <option value="grade">Enter grade directly</option>
         </select>
       </div>
-
-      <div class="marksFields">
-        <label>MSE (out of 40)</label>
-        <input class="mse" type="number" min="0" max="40" step="any">
-      </div>
-
-      <div class="marksFields">
-        <label>CIA (out of 30)</label>
-        <input class="cia" type="number" min="0" max="30" step="any">
-      </div>
-
-      <div class="marksFields">
-        <label>SEE (out of 80)</label>
-        <input class="see" type="number" min="0" max="80" step="any">
-      </div>
-
+      <div class="marksFields"><label>MSE (out of 40)</label><input class="mse" type="number" min="0" max="40" step="any"></div>
+      <div class="marksFields"><label>CIA (out of 30)</label><input class="cia" type="number" min="0" max="30" step="any"></div>
+      <div class="marksFields"><label>SEE (out of 80)</label><input class="see" type="number" min="0" max="80" step="any"></div>
       <div class="gradeField" hidden>
-        <label>Select Grade</label>
+        <label>Grade</label>
         <select class="grade">
           <option value="">Choose grade</option>
           <option value="O">O — Outstanding (10)</option>
@@ -359,387 +176,180 @@ function addSubject(sem) {
         </select>
       </div>
     </div>
-
     <button type="button" class="remove">Remove Subject</button>
   `;
 
-  div.querySelector(".remove").addEventListener("click", () => {
+  const mode=div.querySelector(".entryMode");
+  function updateMode() {
+    const direct=mode.value==="grade";
+    div.querySelectorAll(".marksFields").forEach(field=>field.hidden=direct);
+    div.querySelector(".gradeField").hidden=!direct;
+    div.querySelectorAll(".marksFields input").forEach(input=>input.required=!direct);
+    div.querySelector(".grade").required=direct;
+    invalidateResults();
+  }
+  mode.addEventListener("change",updateMode);
+  div.querySelectorAll("input,select").forEach(input=>{
+    input.addEventListener("input",invalidateResults);
+    input.addEventListener("change",invalidateResults);
+  });
+  div.querySelector(".remove").addEventListener("click",()=>{
     div.remove();
     invalidateResults();
   });
-
-  const modeSelect = div.querySelector(".entryMode");
-
-  const updateEntryMode = () => {
-    const useGrade = modeSelect.value === "grade";
-
-    div.querySelectorAll(".marksFields").forEach(field => {
-      field.hidden = useGrade;
-    });
-
-    div.querySelector(".gradeField").hidden = !useGrade;
-
-    div.querySelectorAll(".marksFields input").forEach(input => {
-      input.required = !useGrade;
-    });
-
-    div.querySelector(".grade").required = useGrade;
-    invalidateResults();
-  };
-
-  modeSelect.addEventListener("change", updateEntryMode);
-
-  div.querySelectorAll("input, select").forEach(input => {
-    input.addEventListener("input", invalidateResults);
-    input.addEventListener("change", invalidateResults);
-  });
-
-  updateEntryMode();
-  document.getElementById("sem" + sem).appendChild(div);
-}
-
-const gradePoints = {
-  "O": 10, "A+": 9, "A": 8, "B+": 7,
-  "B": 6, "C": 5, "P": 4, "F": 0
-};
-
-const gradeDescriptions = {
-  "O": "Outstanding",
-  "A+": "Excellent",
-  "A": "Very Good",
-  "B+": "Good",
-  "B": "Above Average",
-  "C": "Average",
-  "P": "Pass",
-  "F": "Fail"
-};
-
-function getGradeFromTotal(total) {
-  if (total >= 90) return "O";
-  if (total >= 80) return "A+";
-  if (total >= 70) return "A";
-  if (total >= 60) return "B+";
-  if (total >= 55) return "B";
-  if (total >= 50) return "C";
-  if (total >= 40) return "P";
-  return "F";
+  updateMode();
+  $("sem"+sem).appendChild(div);
 }
 
 function readSemester(sem) {
-  const subjects = [
-    ...document.querySelectorAll("#sem" + sem + " .subject")
-  ];
+  const subjects=[...document.querySelectorAll("#sem"+sem+" .subject")];
+  if(!subjects.length)throw new Error(`Add at least one subject to Semester ${sem}.`);
 
-  if (subjects.length === 0) {
-    throw new Error("Add at least one subject to Semester " + sem + ".");
-  }
+  let totalCredits=0, weightedPoints=0;
+  const rows=[];
 
-  let totalCredits = 0;
-  let weightedPoints = 0;
-  const rows = [];
+  for(const el of subjects) {
+    const name=el.querySelector(".name").value.trim();
+    const creditText=el.querySelector(".credits").value;
+    const mode=el.querySelector(".entryMode").value;
 
-  for (const el of subjects) {
-    const name = el.querySelector(".name").value.trim();
-    const creditInput = el.querySelector(".credits").value;
-    const mode = el.querySelector(".entryMode").value;
+    if(!name||creditText==="")throw new Error(`Enter the subject name and credits in Semester ${sem}.`);
+    const credits=Number(creditText);
+    if(!Number.isFinite(credits)||credits<=0||credits>100)throw new Error(`Check the credits in Semester ${sem}.`);
 
-    if (!name || creditInput === "") {
-      throw new Error(
-        "Enter the subject name and credits in Semester " + sem + "."
-      );
-    }
+    let mse=null,cia=null,see=null,total=null,grade,gp;
 
-    const credits = Number(creditInput);
+    if(mode==="marks") {
+      const a=el.querySelector(".mse").value;
+      const b=el.querySelector(".cia").value;
+      const c=el.querySelector(".see").value;
+      if(a===""||b===""||c==="")throw new Error(`Enter MSE, CIA and SEE for every subject in Semester ${sem}.`);
 
-    if (!Number.isFinite(credits) || credits <= 0 || credits > 100) {
-      throw new Error("Check the credits in Semester " + sem + ".");
-    }
+      mse=Number(a);cia=Number(b);see=Number(c);
+      if(![mse,cia,see].every(Number.isFinite)||mse<0||mse>40||cia<0||cia>30||see<0||see>80)
+        throw new Error(`MSE must be 0–40, CIA 0–30 and SEE 0–80 in Semester ${sem}.`);
 
-    let mse = null;
-    let cia = null;
-    let see = null;
-    let total = null;
-    let grade;
-    let gp;
-
-    if (mode === "marks") {
-      const mseInput = el.querySelector(".mse").value;
-      const ciaInput = el.querySelector(".cia").value;
-      const seeInput = el.querySelector(".see").value;
-
-      if (mseInput === "" || ciaInput === "" || seeInput === "") {
-        throw new Error(
-          "Enter MSE, CIA and SEE marks for every subject in Semester " +
-          sem + "."
-        );
-      }
-
-      mse = Number(mseInput);
-      cia = Number(ciaInput);
-      see = Number(seeInput);
-
-      if (
-        ![mse, cia, see].every(Number.isFinite) ||
-        mse < 0 || mse > 40 ||
-        cia < 0 || cia > 30 ||
-        see < 0 || see > 80
-      ) {
-        throw new Error(
-          "MSE must be 0–40, CIA 0–30 and SEE 0–80 in Semester " +
-          sem + "."
-        );
-      }
-
-      total = mse * 0.75 + cia + see / 2;
-      grade = getGradeFromTotal(total);
-      gp = gradePoints[grade];
-
+      total=mse*0.75+cia+see/2;
+      grade=getGradeFromTotal(total);
+      gp=gradePoints[grade];
     } else {
-      grade = el.querySelector(".grade").value;
-
-      if (!grade || !(grade in gradePoints)) {
-        throw new Error(
-          "Select a grade for every subject in Semester " + sem + "."
-        );
-      }
-
-      gp = gradePoints[grade];
+      grade=el.querySelector(".grade").value;
+      if(!grade||!(grade in gradePoints))throw new Error(`Select a grade for every subject in Semester ${sem}.`);
+      gp=gradePoints[grade];
     }
 
-    totalCredits += credits;
-    weightedPoints += credits * gp;
-
-    rows.push({
-      name,
-      credits,
-      mode,
-      mse,
-      cia,
-      see,
-      total,
-      grade,
-      gp,
-      description: gradeDescriptions[grade]
-    });
+    totalCredits+=credits;
+    weightedPoints+=credits*gp;
+    rows.push({name,credits,mode,mse,cia,see,total,grade,gp,description:gradeDescriptions[grade]});
   }
 
-  return {
-    rows,
-    credits: totalCredits,
-    points: weightedPoints,
-    sgpa: weightedPoints / totalCredits
-  };
+  return {rows,credits:totalCredits,points:weightedPoints,sgpa:weightedPoints/totalCredits};
 }
 
-function calculate() {
-  const error = document.getElementById("error");
-  const output = document.getElementById("results");
+function makeTable(sem,data) {
+  let html=`<h3>Semester ${sem} Results</h3><div class="table-wrap"><table>
+  <thead><tr><th>Subject</th><th>Credits</th><th>Entry Method</th><th>Total / 100</th><th>Grade</th><th>Grade Points</th></tr></thead><tbody>`;
 
-  error.textContent = "";
-  output.innerHTML = "";
-  invalidateResults();
+  data.rows.forEach(r=>{
+    html+=`<tr><td>${escapeHTML(r.name)}</td><td>${r.credits}</td>
+    <td>${r.mode==="marks"?"MSE/CIA/SEE":"Grade entered"}</td>
+    <td>${r.total===null?"—":r.total.toFixed(2)}</td>
+    <td>${escapeHTML(r.grade)} (${escapeHTML(r.description)})</td><td>${r.gp}</td></tr>`;
+  });
+
+  return html+`</tbody></table></div><p>Total Credits: ${data.credits.toFixed(2)}</p>
+  <p><strong>SGPA: ${data.sgpa.toFixed(2)}</strong></p>`;
+}
+
+async function calculate() {
+  if(saving)return;
+  $("error").textContent="";
+  $("saveStatus").textContent="";
+  $("results").innerHTML="";
+  const versionAtStart=submissionVersion;
+  const button=$("calculateButton");
 
   try {
-    const studentName = document.getElementById("student").value.trim();
-    const studentId = document.getElementById("usn").value.trim();
+    const studentName=$("student").value.trim();
+    const studentId=$("usn").value.trim();
+    if(!studentName)throw new Error("Enter the student's name.");
 
-    if (!studentName) {
-      throw new Error("Enter the student's name.");
-    }
+    const semesters=[];
+    for(let sem=1;sem<=activeSemesterCount;sem++)semesters.push(readSemester(sem));
 
-    const semesters = [];
+    const totalCredits=semesters.reduce((sum,s)=>sum+s.credits,0);
+    if(totalCredits<=0)throw new Error("Total credits must be greater than zero.");
+    const totalPoints=semesters.reduce((sum,s)=>sum+s.points,0);
+    const cgpa=totalPoints/totalCredits;
 
-    for (let sem = 1; sem <= activeSemesterCount; sem++) {
-      semesters.push(readSemester(sem));
-    }
-
-    const totalCredits = semesters.reduce(
-      (sum, data) => sum + data.credits, 0
-    );
-
-    const totalPoints = semesters.reduce(
-      (sum, data) => sum + data.points, 0
-    );
-
-    const cgpa = totalPoints / totalCredits;
-
-    latestResults = {
-      student_name: studentName,
-      student_id: studentId || null,
-      semester_count: activeSemesterCount,
-
-      semesters: semesters.map((data, index) => ({
-        semester: index + 1,
-        subjects: data.rows,
-        sgpa: Number(data.sgpa.toFixed(2)),
-        total_credits: Number(data.credits.toFixed(2))
+    const payload={
+      student_name:studentName,
+      student_id:studentId||null,
+      semester_count:activeSemesterCount,
+      semesters:semesters.map((data,index)=>({
+        semester:index+1,
+        subjects:data.rows,
+        sgpa:Number(data.sgpa.toFixed(2)),
+        total_credits:Number(data.credits.toFixed(2))
       })),
-
-      cgpa: Number(cgpa.toFixed(2)),
-      total_credits: Number(totalCredits.toFixed(2))
+      cgpa:Number(cgpa.toFixed(2)),
+      total_credits:Number(totalCredits.toFixed(2))
     };
 
-    savedSnapshot = JSON.stringify(latestResults);
+    $("results").innerHTML=
+      semesters.map((data,index)=>makeTable(index+1,data)).join("")+
+      `<div class="result"><h2>Final CGPA (${activeSemesterCount} Semester${activeSemesterCount===1?"":"s"})</h2>
+      <div class="big">${cgpa.toFixed(2)}</div><p>${escapeHTML(studentName)}</p>
+      ${semesters.map((data,index)=>`<p>Semester ${index+1} SGPA: ${data.sgpa.toFixed(2)}</p>`).join("")}
+      <p>Total Credits: ${totalCredits.toFixed(2)}</p></div>
+      <button type="button" class="add no-print" id="printButton">Print / Save as PDF</button>`;
+    $("printButton").addEventListener("click",()=>window.print());
 
-    function makeTable(sem, data) {
-      let html = `
-        <h3>Semester ${sem} Results</h3>
-        <div class="table-wrap">
-        <table>
-          <tr>
-            <th>Subject</th>
-            <th>Credits</th>
-            <th>Entry Method</th>
-            <th>Total / 100</th>
-            <th>Grade</th>
-            <th>Grade Points</th>
-          </tr>
-      `;
+    // Save automatically after a successful calculation.
+    saving=true;
+    button.disabled=true;
 
-      data.rows.forEach(r => {
-        html += `
-          <tr>
-            <td>${escapeHTML(r.name)}</td>
-            <td>${r.credits}</td>
-            <td>${r.mode === "marks" ? "MSE/CIA/SEE" : "Grade entered"}</td>
-            <td>${r.total === null ? "—" : r.total.toFixed(2)}</td>
-            <td>${escapeHTML(r.grade)} (${escapeHTML(r.description)})</td>
-            <td>${r.gp}</td>
-          </tr>
-        `;
-      });
-
-      html += `
-        </table>
-        </div>
-        <p>Total Credits: ${data.credits.toFixed(2)}</p>
-        <p><strong>SGPA: ${data.sgpa.toFixed(2)}</strong></p>
-      `;
-
-      return html;
+    if(!window.supabaseClient||typeof window.supabaseClient.from!=="function") {
+      throw new Error("Supabase is not configured. Check supabase-config.js.");
     }
 
-    const semesterTables = semesters
-      .map((data, index) => makeTable(index + 1, data))
-      .join("");
+    const {error}=await window.supabaseClient.from("sgpa_records").insert([payload]);
+    if(error)throw error;
 
-    const sgpaSummary = semesters.map((data, index) =>
-      `<p>Semester ${index + 1} SGPA: ${data.sgpa.toFixed(2)}</p>`
-    ).join("");
-
-    output.innerHTML =
-      semesterTables +
-      `<div class="result">
-        <h2>Final CGPA (${activeSemesterCount} Semester${activeSemesterCount === 1 ? "" : "s"})</h2>
-        <div class="big">${cgpa.toFixed(2)}</div>
-        <p>${escapeHTML(studentName)}</p>
-        ${sgpaSummary}
-        <p>Total Credits: ${totalCredits.toFixed(2)}</p>
-      </div>
-      <button type="button" class="add" onclick="window.print()">
-        Print / Save as PDF
-      </button>`;
-
-    document.getElementById("saveButton").disabled = false;
-
-  } catch (e) {
-    latestResults = null;
-    savedSnapshot = null;
-    document.getElementById("saveButton").disabled = true;
-    error.textContent = e.message;
+    // Intentionally show no success message to students.
+    $("saveStatus").textContent="";
+  } catch(e) {
+    $("error").textContent="Error: "+(e.message||"Could not calculate or save results.");
+    console.error("Calculator/save error:",e);
+  } finally {
+    saving=false;
+    button.disabled=false;
   }
-}
-
-async function saveResults() {
-  const button = document.getElementById("saveButton");
-  const status = document.getElementById("saveStatus");
-
-  if (!latestResults || !savedSnapshot) {
-    status.textContent = "Calculate results first.";
-    return;
-  }
-
-  if (JSON.stringify(latestResults) !== savedSnapshot) {
-    status.textContent =
-      "Your results changed. Calculate again before saving.";
-    button.disabled = true;
-    return;
-  }
-
-  if (
-    !window.supabaseClient ||
-    typeof window.supabaseClient.from !== "function"
-  ) {
-    status.textContent =
-      "Supabase is not configured. Check supabase-config.js.";
-    console.error(
-      "Supabase client missing. Check script order and supabase-config.js."
-    );
-    return;
-  }
-
-  button.disabled = true;
-  status.textContent = "Saving results...";
-
-  try {
-    const { error } = await window.supabaseClient
-      .from("sgpa_records")
-      .insert([latestResults]);
-
-    if (error) throw error;
-
-    // Do not display a success message to students.
-    status.textContent = "";
-
-  } catch (e) {
-    console.error("Supabase save error:", e);
-
-    const details = [
-      e.message,
-      e.details,
-      e.hint,
-      e.code ? "Code: " + e.code : ""
-    ].filter(Boolean).join(" | ");
-
-    status.textContent =
-      "Save failed: " +
-      (details || "Unknown error. Check the browser console.");
-
-    button.disabled = false;
-  }
-}
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, ch => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[ch]);
 }
 
 function resetAll() {
-  document.getElementById("student").value = "";
-  document.getElementById("usn").value = "";
-  document.getElementById("results").innerHTML = "";
-  document.getElementById("error").textContent = "";
-  document.getElementById("saveStatus").textContent = "";
-
-  document.getElementById("semesterStatus").textContent =
-    "Semester 1 is ready.";
-
+  if(saving)return;
+  $("student").value="";
+  $("usn").value="";
+  $("results").innerHTML="";
+  $("error").textContent="";
+  $("saveStatus").textContent="";
+  $("semesterContainer").innerHTML="";
+  activeSemesterCount=0;
+  counts={};
+  $("addSemesterButton").disabled=false;
+  $("semesterStatus").textContent="Semester 1 is ready.";
   invalidateResults();
-  initializeSemesters();
+  addSemester();
 }
 
-document.getElementById("student")
-  .addEventListener("input", invalidateResults);
+$("addSemesterButton").addEventListener("click",addSemester);
+$("calculateButton").addEventListener("click",calculate);
+$("resetButton").addEventListener("click",resetAll);
+$("student").addEventListener("input",invalidateResults);
+$("usn").addEventListener("input",invalidateResults);
 
-document.getElementById("usn")
-  .addEventListener("input", invalidateResults);
-
-initializeSemesters();
+addSemester();
 </script>
 </body>
 </html>
